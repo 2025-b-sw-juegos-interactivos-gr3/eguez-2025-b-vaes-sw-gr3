@@ -1,0 +1,13 @@
+{
+  "name": "eguez-2025-b-vaes-sw-gr3",
+  "version": "1.0.0",
+  "description": "BabylonJS playground local",
+  "scripts": {
+    "start": "http-server -c-1 -p 5500",
+    "live": "npx live-server --port=5500 --open=./index.html"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2"
+  }
+}
