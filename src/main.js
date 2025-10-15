@@ -32,11 +32,7 @@ const createScene = function () {
     box.material = metalMat;
 
     // Esfera con textura de ladrillo
-    const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 2}, scene);
-    sphere.position = new BABYLON.Vector3(0, 1, 0);
-    const brickMat = new BABYLON.StandardMaterial("brickMat", scene);
-    brickMat.diffuseTexture = new BABYLON.Texture("https://img.freepik.com/free-photo/background-made-from-bricks_23-2148742475.jpg", scene);
-    sphere.material = brickMat;
+
 
     // Cilindro con material transparente
     const cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder", {height: 3, diameter: 1.5}, scene);
@@ -61,15 +57,28 @@ const createScene = function () {
     trunk.position = new BABYLON.Vector3(2, 1.5, -3); // Altura centrada en el suelo
 
     const trunkMat = new BABYLON.StandardMaterial("trunkMat", scene);
-    trunkMat.diffuseTexture = new BABYLON.Texture("https://cdn.pixabay.com/photo/2016/03/27/21/16/wood-1283720_1280.jpg", scene);
+    trunkMat.diffuseTexture = new BABYLON.Texture("/assets/textures/wood.jpg", scene);
     trunk.material = trunkMat;
 
     const foliage = BABYLON.MeshBuilder.CreateSphere("foliage", {diameter: 2}, scene);
     foliage.position = new BABYLON.Vector3(2, 3.5, -3); // Encima del tronco
 
     const foliageMat = new BABYLON.StandardMaterial("foliageMat", scene);
-    foliageMat.diffuseTexture = new BABYLON.Texture("https://cdn.pixabay.com/photo/2016/04/01/09/12/leaves-1303794_1280.jpg", scene);
+    foliageMat.diffuseTexture = new BABYLON.Texture("/assets/textures/leaves.jpg", scene);
     foliage.material = foliageMat;
+
+    // Cargar el modelo Yeti desde el archivo local `assets/model/Yeti.gltf`.
+    // Asegúrate de que el servidor sirva la carpeta `assets/` desde la raíz del sitio.
+    BABYLON.SceneLoader.ImportMeshAsync(null, "assets/model/", "Yeti.gltf", scene).then((result) => {
+        const meshes = result.meshes;
+        if (meshes && meshes.length) {
+            meshes[0].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1);
+            console.log('Yeti cargado desde assets/model/Yeti.gltf');
+        }
+    }).catch((err) => {
+        console.error('No se pudo cargar el modelo Yeti desde assets/model/Yeti.gltf:', err);
+    });
+
 
 
     return scene;
