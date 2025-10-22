@@ -12,7 +12,27 @@
     <!-- BabylonJS CDN -->
      <script src="https://preview.babylonjs.com/babylon.js"></script>
 <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
-    <!-- Your scene script -->
-    <script type="module" src="src/main.js"></script>
+        <!-- CannonJS (fallback physics) -->
+        <script src="https://cdn.jsdelivr.net/npm/cannon@0.6.2/build/cannon.min.js"></script>
+        <!-- Havok physics (CDN module) - load then start main.js after resolution (option A) -->
+        <script type="module">
+          import HavokPhysics from "https://cdn.babylonjs.com/havok/HavokPhysics_es.js";
+          // Try to initialize Havok, then import the main scene only after we attempted to load Havok
+          window.havokReady = HavokPhysics().then((havok) => {
+            window.havokInstance = havok;
+            try { window.HK = havok; } catch (e) { /* ignore */ }
+            console.log('index.html: Havok loaded and window.HK set');
+            // Now import the main module so it runs after Havok is ready
+            import('./src/main.js').catch(e => console.error('index.html: failed to import main.js after Havok:', e));
+            return havok;
+          }).catch((e) => {
+            console.warn('index.html: No se pudo cargar Havok desde CDN:', e);
+            window.havokInstance = null;
+            window.HK = null;
+            // Still import main.js so app runs (will detect Havok missing)
+            import('./src/main.js').catch(e2 => console.error('index.html: failed to import main.js after failed Havok load:', e2));
+            return null;
+          });
+        </script>
   </body>
 </html>
